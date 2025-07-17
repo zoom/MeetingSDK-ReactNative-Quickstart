@@ -2,6 +2,48 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <!-- In Meeting Kubi Functions will need the following Permissions -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+    <!-- In Meeting Share/Annotation/VirtualBackground will need the following Permissions -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32"/>
+
+    <!-- "Connect to the network" will need the following Permissions -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+
+    <!-- In Meeting "Audio With VOIP" will need the following Permissions -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
+    <!-- In Meeting "Kubi Device/Audio with bluetooth" will need the following Permissions -->
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.BROADCAST_STICKY" />
+
+    <!-- In Meeting "Audio With VOIP/Share Screen Audio" will need the following Permissions -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
+    <!-- "Preview/In Meeting Video/VirtualBackground/Share Camera" will need the following Permissions -->
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <!-- "Keep the CPU on in meeting when screen off" will need the following Permissions -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <!-- In Meeting "audio with Dial in" will need the following Permissions -->
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+
+    <!-- In Meeting "share screen/MiniMeeting" will need the following Permissions -->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+
+    <!-- "Foreground services and notifications"  will need the following Permissions -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
     <application
       android:name=".MainApplication"
       android:label="@string/app_name"

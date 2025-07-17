@@ -3,15 +3,18 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "android": "react-native run-android",
+    "android": "bun bundle && react-native run-android",
     "ios": "react-native run-ios",
+    "bundle": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res",
     "lint": "eslint .",
     "start": "react-native start",
     "test": "jest"
   },
   "dependencies": {
+    "@zoom/meetingsdk-react-native": "^6.4.10",
     "react": "18.3.1",
-    "react-native": "0.77.2"
+    "react-native": "0.77.2",
+    "react-native-pure-jwt": "^3.0.3"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
