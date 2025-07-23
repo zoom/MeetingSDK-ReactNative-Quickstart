@@ -1,6 +1,11 @@
 
 import { sign } from 'react-native-pure-jwt';
-
+/**
+ * Disclaimer
+ * It's not recommended to store your credentials in the source code.
+ * This is only for demonstration purposes for sake of simplicity.
+ * You should use a secure backend to generate the token and pass it to the client.
+ */
 const ZOOM_MEETING_SDK_KEY = '';
 const ZOOM_MEETING_SDK_SECRET = '';
 
@@ -10,7 +15,6 @@ export const config = {
     password: '',
     role: 0,
 };
-
 
 export async function generateJwt() {
     const iat = new Date().getTime();

@@ -1,97 +1,141 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# Zoom MeetingSDK React Native Demo
 
-# Getting Started
+Use of this sample app is subject to our [Terms of Use](https://explore.zoom.us/en/legal/zoom-api-license-and-tou/).
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+This is a sample application that demonstrates how to use the [Zoom Meeting SDK](https://developers.zoom.us/docs/meeting-sdk/react-native) in a React Native application bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
 
-## Step 1: Start Metro
+## Prerequisites
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+- [Environment setup](https://reactnative.dev/docs/environment-setup) for React Native
+- Node (LTS)
+- [Bun](https://bun.sh/) (or a package manager of your choice)
+- [Zoom Meeting SDK credentials](https://developers.zoom.us/docs/meeting-sdk/get-credentials/)
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+## Getting Started
 
-```sh
-# Using npm
-npm start
+1. Clone the Repo
 
-# OR using Yarn
-yarn start
+```bash
+git clone https://github.com/zoom/MeetingSDK-ReactNative-Quickstart.git
 ```
 
-## Step 2: Build and run your app
+2. Install the dependencies
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
-
-### Android
-
-```sh
-# Using npm
-npm run android
-
-# OR using Yarn
-yarn android
+```bash
+bun install
 ```
 
-### iOS
+3. Install cocoapods (iOS only)
 
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
-
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
-
-```sh
-bundle install
+```bash
+bunx pod-install ## (or) cd ios && pod install
 ```
 
-Then, and every time you update your native dependencies, run:
+4. Add your Zoom Meeting SDK credentials
 
-```sh
-bundle exec pod install
+- Open `src/JWT.ts` and add your `ZOOM_MEETING_SDK_KEY` and `ZOOM_MEETING_SDK_SECRET` with your Zoom Meeting SDK credentials.
+
+- Update the `config` object with your meeting number, user name, password and role.
+
+> **Disclaimer**: It's not recommended to store your credentials in the source code. This is only for demonstration purposes for sake of simplicity. You should use a secure backend to generate the token and pass it to the client.
+
+5. Run the app
+
+```bash
+bun run ios
+# or
+bun run android
+```
+> Note: The app doesn't support hot reloading on Android.
+
+## How to setup in a fresh project
+
+1. Create a new project, we recommend using React Native CLI to simplify the setup
+
+```bash
+bunx react-native@latest init zoom-meeting-sdk
 ```
 
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
+2. Install the Zoom Meeting SDK
 
-```sh
-# Using npm
-npm run ios
+```bash
+bun i @zoom/meetingsdk-react-native
+```
+- For Android: add `implementation 'us.zoom.meetingsdk:zoomsdk:6.4.10'` to the `dependencies` in `android/app/build.gradle` file. Use the version number matching the npm packge.
+- For iOS run: `npx pod-install` to install the pods
 
-# OR using Yarn
-yarn ios
+3. Add permissions for the camera and microphone
+
+- For iOS: add `NSCameraUsageDescription` and `NSMicrophoneUsageDescription` to your `Info.plist` file.
+```xml
+    <key>NSCameraUsageDescription</key>
+	<string>For people to see you during meetings, we need access to your camera.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>For people to hear you during meetings, we need access to your microphone.</string>
 ```
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+- For Android: add the necessary permissions to your `android/app/src/main/AndroidManifest.xml` file. Example:
+```xml
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- "Connect to the network" will need the following Permissions -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <!-- In Meeting "Audio With VOIP/Share Screen Audio" will need the following Permissions -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <!-- "Preview/In Meeting Video/VirtualBackground/Share Camera" will need the following Permissions -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <!-- "Keep the CPU on in meeting when screen off" will need the following Permissions -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    ...
+```
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+You can read the [docs](https://developers.zoom.us/docs/meeting-sdk/react-native/integrate/) for more details on the permissions.
 
-## Step 3: Modify your app
+4. Android only configuration
 
-Now that you have successfully run the app, let's make changes!
+- Make sure you're using at least `minSdkVersion = 26` & `targetSdkVersion = 35` in your `android/build.gradle` file.
 
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
+- The Meeting SDK doesn't support cleartext traffic for security reasons. Edit the `android/app/src/debug/AndroidManifest.xml` file to disable it:
+```diff
+    <application
+        android:usesCleartextTraffic="true"
++        tools:replace="android:usesCleartextTraffic"
+        ...
+```
 
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
+5. Wrap your app in the `ZoomSDKProvider`
 
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
+```tsx
+function App() {
+  ...
+  return (
+    <ZoomSDKProvider config={{....}}>
+      <YourApp>
+    </ZoomSDKProvider>
+  );
+```
 
-## Congratulations! :tada:
+6. Use the Zoom Meeting SDK
 
-You've successfully run and modified your React Native App. :partying_face:
+```tsx
+function YourApp() {
+  const zoom = useZoom();
+  const handleJoin = async () => {
+     await zoom.joinMeeting({....});
+  }
+  ...
+```
 
-### Now what?
+7. Run the app
 
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
+```bash
+# Android
+bun run react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res
+bun run android
+# iOS
+bun run ios
+```
 
-# Troubleshooting
+## Need help?
 
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+If you're looking for help, try [Developer Support](https://devsupport.zoom.us) or our [Developer Forum](https://devforum.zoom.us). Priority support is also available with [Premier Developer Support](https://explore.zoom.us/docs/en-us/developer-support-plans.html) plans.
