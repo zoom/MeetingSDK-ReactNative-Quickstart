@@ -103,6 +103,29 @@ You can read the [docs](https://developers.zoom.us/docs/meeting-sdk/react-native
         ...
 ```
 
+- First, create the network security config file at `android/app/src/main/res/xml/network_security_config.xml`:
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+</network-security-config>
+```
+
+- Then, edit the `android/app/src/debug/AndroidManifest.xml` file to reference this config and disable cleartext traffic warnings:
+```xml
+<application
+    android:usesCleartextTraffic="true"
+    android:networkSecurityConfig="@xml/network_security_config"
+    tools:replace="android:usesCleartextTraffic,android:networkSecurityConfig"
+    ...
+```
+
+> **Note**: This configuration is necessary for hot reload to work properly with the Zoom Meeting SDK on Android, as it allows the Metro bundler to communicate with the app during development.
+
 5. Wrap your app in the `ZoomSDKProvider`
 
 ```tsx
