@@ -1,0 +1,23 @@
+README.md
+  e031be0896105700 1-4,6-11,13-28,30-42,44,46-52,54-59,61-62,64-140,142,144-148
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.23",
+  "base_commit_sha": "8f174e25fc5a3b9b33f0576d707ddc481aebfebd",
+  "prompts": {
+    "e031be0896105700": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c5ad3e9e-3346-41f9-b693-d8ef8695bac3",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "ekaansh <ekaansh68@gmail.com>",
+      "messages": [],
+      "total_additions": 199,
+      "total_deletions": 0,
+      "accepted_lines": 138,
+      "overriden_lines": 10
+    }
+  }
+}
