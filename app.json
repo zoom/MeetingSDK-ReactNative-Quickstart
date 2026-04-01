@@ -1,0 +1,54 @@
+{
+  "expo": {
+    "name": "meetingSDKQuickstart",
+    "slug": "meetingSDKQuickstart",
+    "scheme": "meetingsdkquickstart",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.ekaansh.meetingSDKQuickstart",
+      "infoPlist": {
+        "NSBluetoothPeripheralUsageDescription": "We will use your Bluetooth to access your Bluetooth headphones.",
+        "NSCameraUsageDescription": "For people to see you during meetings, we need access to your camera.",
+        "NSMicrophoneUsageDescription": "For people to hear you during meetings, we need access to your microphone.",
+        "NSLocationWhenInUseUsageDescription": "To share your location during meetings.",
+        "NSPhotoLibraryUsageDescription": "For people to share, we need access to your photos"
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "edgeToEdgeEnabled": true,
+      "predictiveBackGestureEnabled": false,
+      "package": "com.ekaansh.meetingSDKQuickstart"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "./plugins/withZoomSdk/app.plugin.js",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "compileSdkVersion": 36,
+            "targetSdkVersion": 35,
+            "buildToolsVersion": "35.0.0",
+            "minSdkVersion": 28
+          }
+        }
+      ]
+    ]
+  }
+}
