@@ -95,13 +95,25 @@ You can read the [docs](https://developers.zoom.us/docs/meeting-sdk/react-native
 
 - Make sure you're using at least `minSdkVersion = 26` & `targetSdkVersion = 35` in your `android/build.gradle` file.
 
-- The Meeting SDK doesn't support cleartext traffic for security reasons. Edit the `android/app/src/debug/AndroidManifest.xml` file to disable it:
+- The Meeting SDK (or its dependencies) may merge manifest entries that restrict cleartext and/or a `networkSecurityConfig`, which can block **Metro** in debug (HTTP to `http://<host>:8081`). Setting `usesCleartextTraffic="true"` in debug alone is not always enough if a merged `networkSecurityConfig` still forbids cleartext.
+
+  This quickstart includes a **debug-only** overlay:
+
+  - Add `android/app/src/debug/res/xml/network_security_config.xml` with a `base-config` where `cleartextTrafficPermitted="true"` (already present in this repo).
+  - In `android/app/src/debug/AndroidManifest.xml`, point `android:networkSecurityConfig` at that file and use `tools:replace="android:networkSecurityConfig,android:usesCleartextTraffic"` so the debug manifest wins over merged SDK values.
+
+  Example `application` attributes for your own app if you merge manually:
+
 ```diff
     <application
++        android:networkSecurityConfig="@xml/network_security_config"
         android:usesCleartextTraffic="true"
-+        tools:replace="android:usesCleartextTraffic"
+-        tools:replace="android:usesCleartextTraffic"
++        tools:replace="android:networkSecurityConfig,android:usesCleartextTraffic"
         ...
 ```
+
+  **Release** builds should keep cleartext off and rely on the pre-bundled JS and HTTPS APIs only; the files under `src/debug/` do not apply to release.
 
 5. Wrap your app in the `ZoomSDKProvider`
 
