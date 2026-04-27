@@ -21,6 +21,8 @@ git clone https://github.com/zoom/MeetingSDK-ReactNative-Quickstart.git
 
 2. Install the dependencies
 
+Bun reapplies **`patchedDependencies`** (see `package.json` and `patches/`) when you install—this sample includes an Android-only patch for `@zoom/meetingsdk-react-native`.
+
 ```bash
 bun install
 ```
@@ -135,6 +137,49 @@ bun run android
 # iOS
 bun run ios
 ```
+
+## Troubleshooting
+
+### Android: native crash when `joinMeeting` / `startMeeting` fail (`PromiseImpl.reject` / `userInfo`)
+
+**Version note:** This crash was reproduced using **`@zoom/meetingsdk-react-native@6.7.2`**—the faulty `promise.reject(..., (WritableMap) null)` calls in **`joinMeeting`** / **`startMeeting`** were present in that version (the same pattern exists in **6.4.10**, which this quickstart pins).
+
+**What goes wrong:** In `RNZoomSDKModule.java`, the `catch` blocks for **`joinMeeting`** and **`startMeeting`** call `promise.reject("…_failure", "…", (WritableMap) null)`. On React Native Android, `PromiseImpl.reject` treats the third argument as **non-null `userInfo` (`WritableMap`)**; passing **`null`** can throw **before** the rejection reaches JavaScript, so the **process may crash** instead of your app receiving a rejected promise.
+
+**Example (Firebase Crashlytics):** the stack may reference `PromiseImpl.reject` and `RNZoomSDKModule` (line numbers vary by SDK / mapping):
+
+```
+Fatal Exception: java.lang.NullPointerException
+Parameter specified as non-null is null: method com.facebook.react.bridge.PromiseImpl.reject, parameter userInfo
+com.facebook.react.bridge.PromiseImpl.reject (PromiseImpl.kt:…)
+com.reactnativezoom.sdk.RNZoomSDKModule$….run (RNZoomSDKModule.java:…)
+```
+
+**Fix:** pass the caught exception as the third argument (the `Throwable` overload), not `(WritableMap) null`:
+
+```java
+promise.reject("joinMeeting_failure", "Join meeting failed", e);
+promise.reject("startMeeting_failure", "Start meeting failed", e);
+```
+
+**This repo:** The same **`promise.reject(..., e)`** change is applied to **`@zoom/meetingsdk-react-native@6.4.10`** via **[Bun `patchedDependencies`](https://bun.com/docs/pm/cli/patch)** and a file under `patches/` (first verified against **6.7.2** above). This quickstart stays on **6.4.10** for npm and `zoomsdk` in Gradle. If you **upgrade** Zoom, regenerate the patch for that version ([Bun patch](https://bun.com/docs/pm/cli/patch)).
+
+**Without Bun (npm / Yarn):** use **[patch-package](https://github.com/ds300/patch-package)** until Zoom publishes the fix on npm:
+
+1. Edit `node_modules/@zoom/meetingsdk-react-native/android/src/main/java/com/reactnativezoom/sdk/RNZoomSDKModule.java` as above (both `catch` blocks).
+2. Add **`patch-package`** as a dev dependency and `"postinstall": "patch-package"` in `package.json`.
+3. Run **`npx patch-package @zoom/meetingsdk-react-native`** and commit the generated file under **`patches/`** (the filename includes the package version).
+
+**Upstream:** the Java file ships inside **`@zoom/meetingsdk-react-native`**. If the wrapper sources are not public in your workflow, report via **[Zoom Developer Support](https://developers.zoom.us/)** or the [Developer Forum](https://devforum.zoom.us) and attach the diff.
+
+**Verify after patching:**
+
+- [ ] Force a join failure (e.g. invalid meeting params): **no native crash**; JS receives a rejected promise.
+- [ ] Successful join/start path unchanged.
+
+**References:** [@zoom/meetingsdk-react-native](https://www.npmjs.com/package/@zoom/meetingsdk-react-native), [patch-package](https://github.com/ds300/patch-package), [Bun patch](https://bun.com/docs/pm/cli/patch).
+
+After upgrading the Zoom npm package, run **`bunx pod-install`** (or `cd ios && pod install`) so iOS pods match the new version.
 
 ## Need help?
 
