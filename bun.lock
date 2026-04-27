@@ -1,5 +1,6 @@
 {
   "lockfileVersion": 1,
+  "configVersion": 0,
   "workspaces": {
     "": {
       "name": "RNMeetingSDKQuickstart",
@@ -30,6 +31,9 @@
         "typescript": "5.0.4",
       },
     },
+  },
+  "patchedDependencies": {
+    "@zoom/meetingsdk-react-native@6.4.10": "patches/@zoom%2Fmeetingsdk-react-native@6.4.10.patch",
   },
   "packages": {
     "@ampproject/remapping": ["@ampproject/remapping@2.3.0", "", { "dependencies": { "@jridgewell/gen-mapping": "^0.3.5", "@jridgewell/trace-mapping": "^0.3.24" } }, "sha512-30iZtAPgz+LTIYoeivqYo853f02jBYSd5uGnGpkFV0M3xOt9aN73erkgYAmZU43x4VfqcnLxW9Kpg3R5LC4YYw=="],

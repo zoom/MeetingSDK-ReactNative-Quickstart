@@ -1,0 +1,22 @@
+diff --git a/android/src/main/java/com/reactnativezoom/sdk/RNZoomSDKModule.java b/android/src/main/java/com/reactnativezoom/sdk/RNZoomSDKModule.java
+index 582d568d10978902fa7f50c07dae0e4fbdddf079..1d432501dec9d55246f43cf30846f63a6f973ea4 100644
+--- a/android/src/main/java/com/reactnativezoom/sdk/RNZoomSDKModule.java
++++ b/android/src/main/java/com/reactnativezoom/sdk/RNZoomSDKModule.java
+@@ -240,7 +240,7 @@ public class RNZoomSDKModule extends ReactContextBaseJavaModule implements ZoomS
+         } catch(Exception e) {
+           Log.d(DEBUG_TAG, "Join meeting failed");
+ 
+-          promise.reject("joinMeeting_failure", "Join meeting failed", (WritableMap) null);
++          promise.reject("joinMeeting_failure", "Join meeting failed", e);
+         }
+       }
+     });
+@@ -293,7 +293,7 @@ public class RNZoomSDKModule extends ReactContextBaseJavaModule implements ZoomS
+           promise.resolve(startMeetingResult);
+ 
+         } catch(Exception e) {
+-          promise.reject("startMeeting_failure", "Start meeting failed", (WritableMap) null);
++          promise.reject("startMeeting_failure", "Start meeting failed", e);
+         }
+       }
+     });
